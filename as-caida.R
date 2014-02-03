@@ -1,9 +1,37 @@
 install.packages('multicore')
 require(multicore)
-install.packages('hash')
-require(hash)
 
+### hash() and unHash() are functions to create hashCode
 
+hash <- function (x, y) {
+  if (x == max(x,y)){
+    return (x^2 + x + y);}
+  else
+    {return (x + y^2);}
+}
+
+unHash <- function (z) {
+  if ( (z - (trunc(sqrt(z)))^2) < trunc(sqrt(z)) ) {
+    return ( c(z - (trunc(sqrt(z)))^2, trunc(sqrt(z))) ); 
+  }
+  else {
+    return ( c(trunc(sqrt(z)), z - (trunc(sqrt(z)))^2 - (trunc(sqrt(z)))) ); 
+  }
+} #unHash
+
+# Testing hash() and unHash()
+# Note: it crashes when we have (10^6, 10^6)
+v1 <- c(1:10000000)
+v2 <- seq(from=10000000,to=1,by=-1)
+v2
+v3 <- c(1:10000000)
+
+for (i in 1:10000000) {
+  temp = unHash(hash(v1[i], v2[i])) - c(v1[i], v2[i])
+  v3[i] = !((temp[1] == 0) && (temp[2] == 0))
+}
+  
+unHash(hash(10000000,10000000))
 
 ### Load all the files at once:
 
