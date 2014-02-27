@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=0.8in]{geometry}
+\usepackage{Sweave}
+\begin{document}
+\input{FeaturesDescription-concordance}
+
+
+% This part is exclusively for making title:
+\title{\textbf{New features for graph study}}
+  \date{\today}
+  \author{Cuong Nguyen\\ Grinnell College \and me again, \\ \LaTeX\ Academy}
+  \vspace*{-30pt}
+  {\let\newpage\relax\maketitle}
+\maketitle
+
+% First section
+\section*{Old features} 
+
+\begin{enumerate}
+  \item 39 binary columns of survival in the previous period
+  \item 1 weight in G40
+  \item 1 percent of 1
+  \item 1 number of switch
+  \item 1 count to last 0
+\end{enumerate}
+
+
+\section*{New features}
+
+\begin{enumerate}
+  \item The number of degrees in the previous graph(s)
+    Let the degree = 0 if the edges does not exist  
+  \item Sum of the degree of the second level of neighbor nodes
+  \item Sum of the degree of the third level of neighbor nodes
+  \item Google Pagerank of a vertices
+  \item The neighborhood that this edge/node belong to
+  
+\end{enumerate}
+
+\section*{New functions to learn}
+\begin{enumerate}
+  \item get.adjlist: Create adjacency lists from a graph, either for adjacent edges or for neighboring vertices.
+  \item get.edgeids: 
+  \item components: Finds all vertices reachable from a given vertex, or the opposite: all vertices from which a given vertex is reachable via a directed path.
+  \item  neighborhood: These functions find the vertices not farther than a given limit from another fixed vertex, these are called the neighborhood of the vertex.
+  \item cohesive.blocks 
+  \item communities: igraph community detection functions return their results as an object from the communities class. This manual page describes the operations of this class.
+  \item community.to.membership: community.to.membership takes a merge matrix, a typical result of community structure detection algorithms and creates a membership vector by performing a given number of merges in the merge matrix.
+  \item clusters: Calculate the maximal (weakly or strongly) connected components of a graph
+  \item edge.betweenness.community: Community structure detection based on edge betweenness
+  \item evcent: Eigen vector centrality
+  \item fastgreedy.community: Community structure via greedy optimization of modularity
+  \item graph.coreness: The k-core of graph is a maximal subgraph in which each vertex has at least degree k. The coreness of a vertex is k if it belongs to the k-core but not to the (k+1)-core.
+  
+  \item vertex.connectivity: The vertex connectivity of a graph or two vertices, this is recently also called group cohesion.  
+\end{enumerate}
+
+\section*{How am I implement all of this?}
+Don't know...
+
+
+
+
+\end{document}

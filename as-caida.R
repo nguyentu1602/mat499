@@ -42,6 +42,7 @@ unHash <- function (z) {
   }
 } #unHash
 
+
 # Testing hash() and unHash()
 # Note: it gives wrong round-off when we have (10^8, 10^8), but anything less works 
 # v1 <- c(1:10000000)
@@ -75,8 +76,8 @@ unHash <- function (z) {
 
 ### Saving the data;
 save(dataFiles,file="as-caida-cleaned.R")
-# load('/Users/cuongnguyen/Dropbox/00.Class/0.S14/MAT499/as-caida/as-caida-cleaned.R')
-load('~/csc207/Git/mat499/as-caida-cleaned.R')
+load('/Users/cuongnguyen/Dropbox/00.Class/0.S14/MAT499/as-caida/as-caida-cleaned.R')
+# load('~/csc207/Git/mat499/as-caida-cleaned.R')
 
 rm(dataFiles)
 require(igraph)
@@ -85,8 +86,13 @@ graphList <- list()
 graphList[[1]] <- graph.data.frame(dataFiles[[1]], directed = TRUE)
 graphList[[1]]
 
-rm(list=ls())
 
+<<<<<<< Updated upstream
+=======
+degree(graph=graphList[[1]], v=1000, mode="in" )
+
+system.time(graphList <- lapply(dataFiles, graph.data.frame))
+>>>>>>> Stashed changes
 system.time(graphList <- mclapply(dataFiles, graph.data.frame))
 
 # Get all edges list
@@ -103,11 +109,12 @@ edgeList[[1]]
 # Created a list of 122 vectors, each containing hashcodes of all the edges
 
 ID <- list()
-system.time(ID <- mclapply(edgeList, function (mat) {
-  v <- vector(mode="numeric", length=length(mat[,1])); 
-  for (i in 1:length(mat[,1])) {
-    v[i] = hash(mat[i,1], mat[i,2])};
-  return (v);cores=4}))
+system.time(ID <- mclapply(edgeList, 
+                           function (mat) {
+                             v <- vector(mode="numeric", length=length(mat[,1])); 
+                             for (i in 1:length(mat[,1])) {
+                               v[i] = hash(mat[i,1], mat[i,2])};
+                             return (v)}) )
 
 edgeList
 
@@ -121,8 +128,11 @@ for (i  in 1:(length(ID) - lag)) {
 }
 
 # A graph showing survivor rate over time
-plot(percentSurvive,ylim=c(0.9,1) )
+plot(percentSurvive,ylim=c(0.1,1) )
 # Very interesting that the survival date for 20070917 is only 35% - I might have to left out 8 last graphs
+
+??reset
+??refresh
 
 
 # Create the feature matrix -----------------------------------------------
@@ -222,19 +232,156 @@ for(k in 1:length(X[[1]][,1]) ) {
 }
   # apply()  
 X[[1]][,lag+10] <- apply(X[[1]][,1:39] , MARGIN=1, FUN=countFirstZero)
+head(X[[1]])
+
+
+# Extracting new features -------------------------------------------------
+
+  # New features 1-4: column lag+11 to 14: 
+
+colnames(X[[1]])[(lag+11): (lag+14)] <- c("fromInDegreeLag1",'fromOutDegreeLag1','toInDegreeLag1', "toOutDegreeLag1")
+
+head(edgeListStr[[lag-1]])
+
+# Create a temp vector for fromInDegreeLag1 and fromOutDegreeLag1
+head(X[[1]])
+
+tempFrom <- cbind( unique(edgeListStr[[lag-1]][,1]),
+               degree(graph=graphList[[lag-1]],v=unique(edgeListStr[[lag-1]][,1]),mode='in',),
+               degree(graph=graphList[[lag-1]],v=unique(edgeListStr[[lag-1]][,1]),mode='out')
+            )
+
+
+tempTo <- cbind( unique(edgeListStr[[lag-1]][,2]),
+                   degree(graph=graphList[[lag-1]],v=unique(edgeListStr[[lag-1]][,2]),mode='in',),
+                   degree(graph=graphList[[lag-1]],v=unique(edgeListStr[[lag-1]][,2]),mode='out')
+)
+positionFrom <- match(edgeListStr[[lag]][,1], tempFrom[,1], nomatch=0)
+positionTo <- match(edgeListStr[[lag]][,2], tempTo[,1], nomatch=0)
+positionFrom[2]
+
+is.vector(tempFrom[1,2:3])
+
+
+for (i in 1:length(positionFrom)) {
+  if (positionFrom[i] != 0) {
+    X[[1]][i,(lag+11):(lag+12)] <- as.numeric(tempFrom[positionFrom[i],2:3])
+  }
+  else {X[[1]][i,(lag+11):(lag+12)] <- 0}
+  
+  if (positionTo[i] != 0) {
+    X[[1]][i,(lag+13):(lag+14)] <- as.numeric(tempTo[positionTo[i],2:3])
+  }
+  else {X[[1]][i,(lag+13):(lag+14)] <- 0}
+} # Done creating the 4 features for 1st lag
+
+ # New features 5: 2nd level degrees
+
+# return in and out degrees of all vertexes
+
+nodeInDeg <- degree(graph=graphList[[lag]],mode='in')
+nodeOutDeg <- degree(graph=graphList[[lag]],mode='out')
+
+# length(nodeInDeg)
+head(nodeInDeg)
+is.vector(nodeInDeg)
+sum(nodeInDeg)
+
+# This will return a list of adjacent vertices to a vertex
+adjNodeIn <- get.adjlist(graph=graphList[[lag]],mode="in")
+adjNodeOut <- get.adjlist(graph=graphList[[lag]],mode="out")
+nodeList <- names(adjNodeIn)
+
+
+head(adjNodeIn)
+is.vector(adjNodeIn['8434'][1])
+is.numeric(adjNodeIn['8434'][1])
+adjNodeIn['8434'][[1]][1] 
+
+# Now to the features:
+
+
+# Initiate numbers of indegree of inNode, indeg of Onode, outdeg of inNode, outdeg of outNode
+inNodeInDeg <-vector()
+inNodeOutDeg <-vector()
+outNodeOutDeg <-vector()
+outNodeInDeg <-vector()
+
+adjNodeIn[1]#[[1]]
+sum(nodeInDeg[adjNodeIn[1][[1]]])
+
+for (i in 1:length(adjNodeIn)) {
+  inNodeInDeg[i] <- sum(nodeInDeg[adjNodeIn[i][[1]]]);
+  inNodeOutDeg[i] <- sum(nodeOutDeg[adjNodeIn[i][[1]]]);
+  outNodeOutDeg [i]  <- sum(nodeOutDeg[adjNodeOut[i][[1]]]);
+  outNodeInDeg [i]  <- sum(nodeInDeg[adjNodeOut[i][[1]]]);
+}
+edgeListStr[[lag]]
+
+posFrom <- match(x=edgeListStr[[lag]][,1],table=nodeList )
+posTo <- match(x=edgeListStr[[lag]][,2],table=nodeList )
+
+
+head(posFrom)
+### Now to put these info into the big matrix: (hard!)
+colnames(X[[1]])[(lag+15): (lag+18)] <- c('fromSecondLevelInNodeInDeg', 'fromSecondLevelOutNodeOutDeg',
+                                          'toSecondLevelInNodeInDeg', 'toSecondLevelOutNodeOutDeg' )
+
+X[[1]][,(lag+15)] <- inNodeInDeg[posFrom]
+X[[1]][,(lag+16)] <- outNodeOutDeg[posFrom]
+X[[1]][,(lag+17)] <- inNodeInDeg[posTo]
+X[[1]][,(lag+18)] <- outNodeOutDeg[posTo]
+
+X[[1]][,lag+19] <- page.rank.old(eps=0.00001,niter=100000,graph=graphList[[lag]],vids=nodeList,directed=TRUE,
+                             damping = 0.85)[posFrom]
+X[[1]][,lag+20] <- page.rank.old(niter=100000,graph=graphList[[lag]],vids=nodeList,directed=TRUE,
+                                 damping = 0.85, eps = 0.00001)[posTo]
+head(X[[1]])
+
+
+names(adjNodeOut)
+adjNodeOut[names(adjNodeOut)[1000]]
+length(adjNodeIn[4][[1]])
+nodeList[1:4]
+
+
+# Neighbourhood Discovery -------------------------------------------------
+
+  # Very useful to get 
+nei <- neighborhood(graph=graphList[[lag]],order=3,mode="all") #tend to be very slow
+
+
+
+# Crash on me:  label.propagation.community(graph=graphList[[lag]],)
+# Does not work on directed graph: fastgreedy
+
+head(nei[[2]])
+
+nei[[2]]
+length(nei)
+head(X[[1]])
 
 # Save the feature matrix to a csv file:
-write.csv(x=cbind(X[[1]][,1:50],Y[[1]]),file="fullData39Lag.csv")  
+write.csv(x=cbind(X[[1]][,1:60],Y[[1]]),file="fullData39Lag.csv")  
 
 getwd()
 # First logistic model ----------------------------------------------------
 
 lapply(list(Y[[1]],ID[[lag]],Y[[2]],ID[[lag+1]],X[[1]][,1]), length)
 
-logit1 <- glm(Y[[1]]~X[[1]][,1:50],family=binomial )
+logit1 <- glm(Y[[1]]~X[[1]][,2:60],family=binomial )
 summary(logit1)
 
-# Ploting
+fit2 <- step.up(logit1)
+
+
+
+sum(Y[[1]])-length(Y[[1]])
+#This part should not be on GitHub
+
+# Sampling and plotting ---------------------------------------------------
+
+# Sampling
 testMat <- cbind(X[[1]][ ,c(1:24,27:28) ], Y[[1]])
 head(testMat)
 dim(testMat)
@@ -251,6 +398,9 @@ colnames(testMatSamp)[27] <- "y"
 head(testMatSamp)
 dim(testMatSamp)
 testMatSamp <- data.frame(testMatSamp)
+
+
+
 
 #Log the variable
 testMatSampLog <- data.frame(testMatSamp)
@@ -280,9 +430,6 @@ pairs(X[[1]][,1:12], col= Y[[1]])
 degree(graph=graphList[[1]], v="23231", mode ="in")
 
 a
-
-
-
 
 head(edgeList[[1]])
 
