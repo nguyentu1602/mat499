@@ -446,22 +446,3 @@ head(edgeList[[1]])
 
 
 
-
-
-# Ch10: Visualization -----------------------------------------------------
-
-
-# library(RCytoscape)
-# gD.cyt <- igraph.to.graphNEL(graphList[[1]])
-# gD.cyt <- initEdgeAttribute (gD.cyt, "weight", 'integer', 0)
-# gDCW <- new.CytoscapeWindow("Les Miserables", graph = gD.cyt, overwriteWindow = TRUE)
-# 
-# # We can display graph, with defaults color/size scheme
-# displayGraph(gDCW)
-
-
-# Ch11: Small graph for illustration --------------------------------------
-install.packages('rgl')
-require(rgl)
-
-
