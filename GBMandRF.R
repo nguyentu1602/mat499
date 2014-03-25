@@ -1,10 +1,17 @@
 # Testing randomforest and GBM with my data:
 require(gbm)
+<<<<<<< Updated upstream
 require(foreach)
 require(parallel)
 require(ROCR)
 detectCores()
 full = read.csv("/Users/cuongnguyen/Program/Git/mat499/fullData39Lag.csv", header= TRUE)
+=======
+require(parallel)
+
+detectCores()
+full = read.csv("~/csc207/Git/mat499/fullData39Lag.csv", header= TRUE)
+>>>>>>> Stashed changes
 N = length(full[,1])
 dim(full)
 
@@ -154,6 +161,7 @@ auc16 <- unlist(slot(auc16, "y.values"))
 pr = 0 # Prediction accuracy for training data
 tr = 0 # Prediction accuracy for testing data
 n.models = 2 # Number of models to try
+<<<<<<< Updated upstream
 GBM.model= vector()
 
 head(full)
@@ -167,10 +175,198 @@ foreach(i in 1:n.models) %dopar% {
   # Add to the old one:
   #pr = pr+pr1
   
+=======
+
+head(full)
+
+GBM.model = gbm(X.1~. -X -X1, data=full, distribution="gaussian", 
+                n.trees= 5000, shrinkage=0.05, interaction.depth=4, 
+                n.minobsinnode=30, cv.folds = 4,n.cores= 4)
+
+GBM.model2 = gbm(X.1~. -X -X1, data=full, distribution="adaboost", 
+                n.trees= 5000, shrinkage=0.01, interaction.depth=4, 
+                n.minobsinnode=20, cv.folds = 4,n.cores= 4)
+
+GBM.model3 = gbm(X.1~. -X -X1, data=full, distribution="gaussian", 
+                 n.trees= 3000, shrinkage=0.01, interaction.depth=5, 
+                 n.minobsinnode=40, cv.folds = 4,n.cores= 4)
+
+GBM.model4 = gbm(X.1~. -X -X1, data=full, distribution="gaussian", 
+                 n.trees= 3000, shrinkage=0.01, interaction.depth=4, 
+                 n.minobsinnode=30, cv.folds = 4,n.cores= 4)
+
+GBM.model5 = gbm(X.1~.-X-X1-X2-X3-X4, data=full, distribution="gaussian", 
+                 n.trees= 8000, shrinkage=0.02, interaction.depth=4, 
+                 n.minobsinnode=30, cv.folds = 8,n.cores= 4)
+
+GBM.model6 = gbm(X.1~.-X-X1-X2-X3-X4, data=full, distribution="gaussian", 
+                 n.trees= 8000, shrinkage=0.02, interaction.depth=4, 
+                 n.minobsinnode=30, cv.folds = 8,class.stratify.cv =TRUE,n.cores= 4)
+
+GBM.model7 = gbm(X.1~.-X-X1-X2-X3-X4, data=full, distribution="gaussian", 
+                 n.trees= 10000, shrinkage=0.01, interaction.depth=5, 
+                 n.minobsinnode=30, n.cores= 4)
+
+GBM.model8 = gbm(X.1~.-X-X1-X2-X3-X4, data=full, distribution="gaussian", 
+                 n.trees= 10000, shrinkage=0.001, interaction.depth=5, 
+                 n.minobsinnode=30, n.cores= 4)
+
+GBM.model9 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10, data=full, distribution="gaussian", 
+                 n.trees= 20000, shrinkage=0.01, interaction.depth=4, 
+                 n.minobsinnode=30, n.cores= 4)
+
+GBM.model10 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10, data=full, distribution="gaussian", 
+                 n.trees= 20000, shrinkage=0.01, interaction.depth=5, 
+                 n.minobsinnode=30, n.cores= 4)
+
+GBM.model11 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10, data=full, distribution="gaussian", 
+                  n.trees= 40000, shrinkage=0.005, interaction.depth=5, 
+                  n.minobsinnode=40, n.cores= 4)
+
+GBM.model12 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10, data=full, distribution="gaussian", 
+                  n.trees= 40000, shrinkage=0.005, interaction.depth=6, 
+                  n.minobsinnode=30, n.cores= 4)
+
+GBM.model13 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10-X12-X13-X14-X15, data=full, distribution="gaussian", 
+                  n.trees= 10000, shrinkage=0.02, interaction.depth=4, 
+                  n.minobsinnode=50, n.cores= 4)
+
+GBM.model14 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10-X12-X13-X14-X15, data=full, distribution="gaussian", 
+                  n.trees= 10000, shrinkage=0.02, interaction.depth=3, 
+                  n.minobsinnode=60, n.cores= 4)
+
+GBM.model15 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10-X11-X12-X13-X14-X15, data=full, distribution="gaussian", 
+                  n.trees= 5000, shrinkage=0.05, interaction.depth=6, 
+                  n.minobsinnode=40, n.cores= 4)
+
+GBM.model16 = gbm(X.1~.-X-X1-X2-X3-X4-X5-X6-X7-X8-X9-X10-X11-X12-X13-X14-X15, data=full, distribution="gaussian", 
+                  n.trees= 5000, shrinkage=0.05, interaction.depth=7, 
+                  n.minobsinnode=50, n.cores= 4)
+#New models:
+
+GBM.model17 = gbm(X.1~.-X-X1, data=full, distribution="gaussian", 
+                  n.trees= 4000, shrinkage=0.01, interaction.depth=2, 
+                  n.minobsinnode=30, n.cores= 4)
+
+GBM.model18 = gbm(X.1~.-X-X1-X2-X3, data=full, distribution="gaussian", 
+                  n.trees= 8000, shrinkage=0.005, interaction.depth=2, 
+                  n.minobsinnode=30, n.cores= 4)
+
+GBM.model19 = gbm(X.1~.-X-X1-X2-X3-X4-X5, data=full, distribution="gaussian", 
+                  n.trees= 10000, shrinkage=0.01, interaction.depth=3, 
+                  n.minobsinnode=30, n.cores= 4)
+
+GBM.model20 = gbm(X.1~.-X-X1-X2-X3-X4-X5, data=full, distribution="gaussian", 
+                  n.trees= 8000, shrinkage=0.01, interaction.depth=3, 
+                  n.minobsinnode=20, n.cores= 4)
+
+GBM.model21 = gbm(X.1~.-X-X1-X2-X3, data=full, distribution="gaussian", 
+                  n.trees= 8000, shrinkage=0.01, interaction.depth=2, 
+                  n.minobsinnode=20, n.cores= 4)
+
+# GBM.model22 = gbm(X.1~.-X-X1, data=full, distribution="gaussian", 
+#                   n.trees= 10000, shrinkage=0.005, interaction.depth=2, 
+#                   n.minobsinnode=15, n.cores= 4)
+
+GBM.model22 = gbm(X.1~.-X-X1, data=full, distribution="gaussian", 
+                  n.trees= 4000, shrinkage=0.01, interaction.depth=3, 
+                  n.minobsinnode=20, n.cores= 4)
+
+GBM.model23 = gbm(X.1~.-X-X1, data=full, distribution="gaussian", 
+                  n.trees= 5000, shrinkage=0.01, interaction.depth=4, 
+                  n.minobsinnode=20, n.cores= 4)
+
+summary(GBM.model15)
+summary(GBM.model12)
+summary(GBM.model11)
+
+
+
+summary(GBM.model16)
+
+
+
+summary(GBM.model8)
+
+
+summary(GBM.model2)
+GBM.model2
+
+
+
+
+for(i in 1:n.models) {
+  GBM.model = gbm(X.1~. -X -X1, data=full, distribution="adaboost", 
+                      n.trees= 1000, shrinkage=0.05, interaction.depth=5, n.minobsinnode=30, n.cores= 4)
+  
+  # Training set Predictions
+  # pr1 = predict(object=GBM.model,newdata=full[,3:61], n.trees=1000)
+  # Add to the old one:
+  #pr = pr+pr1
+>>>>>>> Stashed changes
 }
+pr1 = predict(object=GBM.model,newdata=full[,3:61], n.trees=5000)
+write.csv(pr1, file = "~/csc207/Git/mat499/predict.csv")
+pr2 = predict(object=GBM.model2,newdata=full[,3:61], n.trees=5000)
+write.csv(pr2, file = "~/csc207/Git/mat499/predictGBMmodel2.csv")
+pr3 = predict(object=GBM.model3,newdata=full[,3:61], n.trees=3000)
+write.csv(pr3, file = "~/csc207/Git/mat499/predictGBMmodel3.csv")
+pr4 = predict(object=GBM.model4,newdata=full[,3:61], n.trees=3000)
+write.csv(pr4, file = "~/csc207/Git/mat499/predictGBMmodel4.csv")
+pr5 = predict(object=GBM.model5,newdata=full[,6:61], n.trees=8000)
+write.csv(pr5, file = "~/csc207/Git/mat499/predictGBMmodel5.csv")
+pr6 = predict(object=GBM.model6,newdata=full[,6:61], n.trees=8000)
+write.csv(pr6, file = "~/csc207/Git/mat499/predictGBMmodel6.csv")
+pr7 = predict(object=GBM.model7,newdata=full[,6:61], n.trees=10000)
+write.csv(pr7, file = "~/csc207/Git/mat499/predictGBMmodel7.csv")
+pr8 = predict(object=GBM.model8,newdata=full[,6:61], n.trees=10000)
+write.csv(pr8, file = "~/csc207/Git/mat499/predictGBMmodel8.csv")
+pr9 = predict(object=GBM.model9,newdata=full[,12:61], n.trees=20000)
+write.csv(pr9, file = "~/csc207/Git/mat499/predictGBMmodel9.csv")
+pr10 = predict(object=GBM.model10,newdata=full[,12:61], n.trees=20000)
+write.csv(pr10, file = "~/csc207/Git/mat499/predictGBMmodel10.csv")
+pr11 = predict(object=GBM.model11,newdata=full[,12:61], n.trees=40000)
+write.csv(pr11, file = "~/csc207/Git/mat499/predictGBMmodel11.csv")
+pr12 = predict(object=GBM.model12,newdata=full[,12:61], n.trees=40000)
+write.csv(pr12, file = "~/csc207/Git/mat499/predictGBMmodel12.csv")
+pr13 = predict(object=GBM.model13,newdata=full[,c(12,17:61)], n.trees=10000)
+write.csv(pr13, file = "~/csc207/Git/mat499/predictGBMmodel13.csv")
+pr14 = predict(object=GBM.model14,newdata=full[,c(12,17:61)], n.trees=10000)
+write.csv(pr14, file = "~/csc207/Git/mat499/predictGBMmodel14.csv")
+pr15 = predict(object=GBM.model15,newdata=full[,17:61], n.trees=5000)
+write.csv(pr15, file = "~/csc207/Git/mat499/predictGBMmodel15.csv")
+pr16 = predict(object=GBM.model16,newdata=full[,17:61], n.trees=5000)
+write.csv(pr16, file = "~/csc207/Git/mat499/predictGBMmodel16.csv")
+
+
+
+save(list=ls(pattern="GBM"), file="GBMmodels.R")
+
+getwd()
+
+
+
+head(full[,c(12,17:61)])
+
+
+
+
+length(pr1)
+length(full[,62])
+
+
 
 # Average the prediction:
+<<<<<<< Updated upstream
 pr = pr/n.models
 
 
 pr
+=======
+head(pr1)
+install.packages("verification")
+install.packages("gplots")
+require(gplots)
+require(verification)
+install.packages("ROCR")
+>>>>>>> Stashed changes
