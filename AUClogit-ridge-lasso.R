@@ -2,22 +2,23 @@
 ### Comparing ROCR of logit, ridge and LASSO
 require(ROCR); require(knitr)
 data39lagraw <- read.csv(file='/Users/cuongnguyen/Program/Git/mat499/fullData39Lag.csv',header=TRUE)
-data39lagraw <- data39lagraw[c(-1)]
+train <- data39lagraw[c(-1)]
 
-head(data39lagraw)
+head(train)
 
 ##### NOTE: data need to be standardized! or lasso will perform the worst
 #####
 
 # Standadize the data 
-data39lag <- data.frame(scale(data39lagraw[-61]))
-is.matrix(data39lag)
-data39lag$Y <- data39lagraw$X.1
-head(data39lag)
+train <- data.frame(scale(train[-61]))
+is.matrix(train)
+train$Y <- data39lagraw$X.1
+head(train)
+
 #logit1 <- glm(Y ~ ., data=data39lag, family=binomial)
 logit2 <- glm(Y ~ . + fromInDegree*fromSecondLevelInNodeInDeg + toInDegree*toSecondLevelOutNodeOutDeg   
               -X1 - X2 - X3 -X4 - fromCloseness - toCloseness, data=data39lag, family=binomial)
-attach(data39lag)
+attach(train)
 predict.plot(Y ~ fromInDegree | fromOutDegree, data=data39lag )
 
 
@@ -77,12 +78,13 @@ qplot(fromInDegree, toInDegree, col = Y, data=data39lag)
 
 
 # Ridge regression --------------------------------------------------------
-install.packages("glmnet"); require(glmnet)
+#install.packages("glmnet"); 
+require(glmnet)
 
 # glmnet() take a different input so we need different syntax here
 # create the matrix x and then y
-x <- model.matrix(Y~., data39lag)
-y <- data39lag$Y
+x <- model.matrix(Y~., train)
+y <- train$Y
 
 # create a grid to try different lambda
 grid <- 10^seq(10, -2, length=100)
