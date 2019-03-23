@@ -1,4 +1,4 @@
-mat499
+Advanced Mentored Research project @Grinnell - apply predictive ML techniques on graph connectivity planning 
 ======
 
-For my research
+For my independant research project during my last year at Grinnell.
